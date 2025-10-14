@@ -1,0 +1,159 @@
+\documentclass[a4paper,11pt]{article}
+
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[portuguese]{babel}
+
+%\usepackage[osf,sc]{mathpazo}
+\usepackage[top=1in, bottom=1in, left=1.25in, right=1.25in]{geometry}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathrsfs} % \mathsf
+
+\usepackage[demo]{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz-cd}
+
+\usepackage{quiver}
+% surrounding boxes
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\title{Problem Set 5}
+\author{Matrix Theory \& Linear Algebra II}
+\date{}
+% --new title page--
+
+
+
+% \swapnumbers % 1.1.1. Teorema
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercício}
+\newtheorem{fact}[theorem]{Fato}
+\newtheorem{notation}[theorem]{Notation}
+
+
+
+\newcommand{\bC}{\mathcal C}
+\newcommand{\bF}{\mathcal F}
+\newcommand{\bR}{\mathcal R}
+
+\newcommand{\cP}{\mathcal P}
+
+\newcommand{\dashline}{\noindent\rule{2cm}{0.4pt}}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\noindent
+\begin{enumerate}[(1)]
+    \item
+    Show that if $p$ is a polynomial with real coefficients and a complex root $\lambda$, then $\bar\lambda$ is also a root.
+    Conclude that if $\lambda$ is an eigenvalue of a matrix $T$ with real coefficients, then so is $\bar\lambda$.
+
+    \item
+    Find the (real or complex) eigenvalues and eigenvectors of the following matrices. Diagonalize\footnote{To diagonalize $M$ is to find a diagonal matrix $D$ and a matrix $S$ such that $M = SDS^{-1}$} each matrix if possible by finding a basis of eigenvectors.
+\[
+A = \begin{bmatrix} 2 & 1 \\ -1 & 2 \end{bmatrix}, \quad
+B = \begin{bmatrix} -1 & -2 \\ 1 & 1 \end{bmatrix}, \quad
+C = \begin{bmatrix} 2 & -1 & 3 \\ 0 & 1 & 1 \\ -1 & 1 & 0 \end{bmatrix}, \quad
+D = \begin{bmatrix} 1 & 1 & 1 \\ -1 & 2 & 0 \\ 1 & -1 & 1 \end{bmatrix}
+\]
+
+\item 
+
+\begin{itemize}
+    \item[(a)] Suppose \( \lambda \in \mathbb{F} \) with \( \lambda \neq 0 \). Prove that \( \lambda \) is an eigenvalue of \( T \) if and only if \( \frac{1}{\lambda} \) is an eigenvalue of \( T^{-1} \).
+    \item[(b)] Prove that \( T \) and \( T^{-1} \) have the same eigenvectors.
+\end{itemize}
+
+\item 
+Given the matrix:
+
+
+\[
+A = \begin{bmatrix} 
+2 & 6 & -6 \\ 
+0 & 5 & -2 \\ 
+0 & 0 & 4 
+\end{bmatrix}
+\]
+
+\begin{enumerate}[(a)]
+\item Find its eigenvalues. Is it possible to find the eigenvalues without computing?
+
+\item Is this matrix diagonalizable? Find out without computing anything.
+
+\item If the matrix is diagonalizable, diagonalize it.
+\end{enumerate}
+
+\item 
+Let \( V \) be a finite-dimensional vector space over \( \mathbb{C} \) and let \( T \in \mathcal{L}(V) \). Assume that, with respect to some basis \( (v_1, v_2, v_3, v_4) \) of \( V \), we have:
+
+
+\item 
+Show that if an operator $T:V\to V$ is not invertible, then $0$ is an eigenvalue of $T$.
+
+\item
+\[
+\mathcal{M}(T) = 
+\begin{pmatrix}
+2+i & 3 & -1 & 4 \\
+0 & 1 & 5 & -6 \\
+0 & 0 & 2+i & 2 \\
+0 & 0 & 0 & -3
+\end{pmatrix}
+\]
+
+
+\begin{enumerate}[(a)]
+\item Find the eigenvalues of \( T \).
+\item Determine if \( T \) is invertible.
+\item Explain why, for each \( k \in \{1, 2, 3, 4\} \), we have:
+
+
+\[
+T(\text{span}(v_1, \ldots, v_k)) \subseteq \text{span}(v_1, \ldots, v_k).
+\]
+
+\end{enumerate}
+
+\item
+\begin{itemize}
+    \item[(a)] Give an example of a finite-dimensional complex vector space and an operator \( T \) on that vector space such that \( T^2 \) is diagonalizable but \( T \) is not diagonalizable.
+    \item[(b)] Suppose \( \mathbb{F} = \mathbb{C} \), \( k \) is a positive integer, and \( T \in \mathcal{L}(V) \) is invertible. Prove that \( T \) is diagonalizable if and only if \( T^k \) is diagonalizable.
+\end{itemize}
+
+\item 
+Define \( T \in \mathcal{L}(P_4(\mathbb{R})) \) by \( (Tp)(x) = x p'(x) \) for all \( x \in \mathbb{R} \). Find all eigenvalues and eigenvectors of \( T \).
+
+\item 
+Suppose \( T \in \mathcal{L}(V) \) and \( u, w \) are eigenvectors of \( T \) such that \( u + w \) is also an eigenvector of \( T \). Prove that \( u \) and \( w \) are eigenvectors of \( T \) corresponding to the same 
+
+\item Suppose \( T \in \mathcal{L}(V) \) is such that every nonzero vector in \( V \) is an eigenvector of \( T \). Prove that \( T \) is a scalar multiple of the identity
+\end{enumerate}
+
+\end{document}

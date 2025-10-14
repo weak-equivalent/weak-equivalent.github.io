@@ -1,0 +1,356 @@
+\documentclass[a4paper,11pt]{article}
+
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[portuguese]{babel}
+
+%\usepackage[osf,sc]{mathpazo}
+\usepackage[top=1in, bottom=1in, left=1.25in, right=1.25in]{geometry}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathrsfs} % \mathsf
+
+\usepackage[demo]{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz-cd}
+
+\usepackage{quiver}
+% surrounding boxes
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\title{Problem Set 2}
+\author{Matrix Theory \& Linear Algebra II}
+\date{}
+% --new title page--
+
+
+\setlength{\abovedisplayskip}{1pt}
+\setlength{\belowdisplayskip}{1pt}
+
+% \swapnumbers % 1.1.1. Teorema
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercício}
+\newtheorem{fact}[theorem]{Fato}
+\newtheorem{notation}[theorem]{Notation}
+
+
+\newenvironment{solution}
+  {\renewcommand\qedsymbol{$\blacksquare$}\begin{proof}[Solution]}
+  {\end{proof}}
+
+
+\newcommand{\bC}{\mathcal C}
+\newcommand{\bF}{\mathcal F}
+\newcommand{\bR}{\mathcal R}
+
+\newcommand{\cP}{\mathcal P}
+
+\newcommand{\dashline}{\noindent\rule{2cm}{0.4pt}}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\noindent
+In this problem set, $\mathbb F$ denotes either $\mathbb R$ or $\mathbb C$ (i.e. if $\mathbb F$ is in the question, then the solution should be agnostic to whether it was $\mathbb R$ or $\mathbb C$) and $V$ denotes a vector space over $\mathbb F$.
+
+\begin{enumerate}[(1)]
+\item
+Which of the following lists are linearly independent?
+\begin{enumerate}[(a)]
+    \item 
+    $
+    \mathbf{v}_1 = \begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}, \quad
+    \mathbf{v}_2 = \begin{pmatrix} 4 \\ 5 \\ 6 \end{pmatrix}, \quad
+    \mathbf{v}_3 = \begin{pmatrix} 7 \\ 8 \\ 9 \end{pmatrix}
+    $,
+    as vectors of $\mathbb R^3$.
+    \item 
+    $
+    p_1 = -1, \quad
+    p_2 = x-1, \quad
+    p_3 = (x-1)^2$,
+    as vectors of $\mathcal P(\mathbb C)$.
+    \item
+    $
+    \sigma_x=
+    \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad \sigma_y = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \quad \sigma_z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}
+    $
+    as vectors of $M_{2,2}(\mathbb C)$.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}[(a)]
+\item 
+We have to check whether the equation
+\[
+x\begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}+
+y\begin{pmatrix} 4 \\ 5 \\ 6 \end{pmatrix}+
+z\begin{pmatrix} 7 \\ 8 \\ 9 \end{pmatrix}=0
+\]
+has any non-zero solutions, which correspond to solutions of the system
+\[
+\begin{cases}
+x+4y+7z = 0\\
+2x+5y+8z = 0\\
+3x+6y+9z=0
+\end{cases},
+\]
+which you can find however you'd like.
+One solution suffices to prove linear dependence, here is an example:
+\[
+1\cdot\begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}
+-2\cdot\begin{pmatrix} 4 \\ 5 \\ 6 \end{pmatrix}
++1\cdot\begin{pmatrix} 7 \\ 8 \\ 9 \end{pmatrix}=0.
+\]
+\item 
+We have to check whether the equation
+\[
+a\cdot(-1)+b\cdot(x-1)+c\cdot (x-1)^2=0
+\]
+has no non-zero solutions.
+Expanding out and collecting coefficients, the equation becomes
+\[
+(-a-b+c)\cdot 1 + (b-2c)\cdot x + c\cdot x^2=0.
+\]
+A polynomial is zero iff its coefficients are zero (in other words, $\{1,x,x^2\}$ is l.i.).
+So we have the system
+\[
+\begin{cases}
+    -a-b+c=0\\
+    b-2c=0\\
+    c=0
+\end{cases}
+\]
+which clearly has only $a=b=c=0$ as a solution.
+So the set is linearly independent.
+\item 
+We have to check whether the equation
+\[
+a\cdot\sigma_x+b\cdot\sigma_y+c\cdot \sigma_z=0
+\]
+has no non-zero solutions.
+By expanding out coefficients, this corresponds to the equation
+\[
+\begin{pmatrix}
+    c & a-i\cdot b\\ a+i\cdot b & c
+\end{pmatrix}
+=
+\begin{pmatrix}
+    0&0\\0&0
+\end{pmatrix},
+\]
+so $c=0$ and $a+ib=a-ib=0 \implies a=b=0$.
+So the set is linearly independent.
+
+\begin{remark}The matrices $\sigma_x$, $\sigma_y$ and $\sigma_z$ are called \textit{Pauli matrices} and are fundamental in quantum mechanics.\end{remark}
+\end{enumerate}
+\end{solution}
+
+\item 
+A matrix is called \textit{anti-symmetric} if $A^\intercal = -A$.
+Write down two (distinct!) bases in the
+space of \textbf{anti-}\footnote{This was a typo in the original problem set.}symmetric 2 × 2 matrices.
+How many elements are in each basis?
+\begin{solution}
+A matrix is anti-symmetric if
+\[
+\begin{bmatrix}
+    a & b \\ c & d
+\end{bmatrix}
+=
+\begin{bmatrix}
+    -a & -d \\ -b & -d
+\end{bmatrix}.
+\]
+In particular $a=-a$, so $a=0$.
+Similarly $c=0$
+Also $b=-d$.
+
+Summarizing, our vector space is
+\[V=\left\{
+\begin{bmatrix}
+    0& b \\ -b & 0
+\end{bmatrix}
+:
+b\in\mathbb F\right\}.
+\]
+The matrix $A = \begin{bmatrix}
+    0& 1 \\ -1 & 0
+\end{bmatrix}$ spans $V$, and the set $\{A\}$ is trivially linear independent so it forms a basis for $V$ in fact.
+Another basis is for instance $\left\{\begin{bmatrix}
+    0& 10 \\ -10 & 0
+\end{bmatrix}\right\}$.
+\end{solution}
+
+\item 
+A polynomial $p\in\mathcal P(\mathbb F)$ is \textit{even} if $p(x) = p(-x)$.
+Prove that even polynomials form a subspace $U\subseteq \mathcal P(\mathbb F)$ and find a basis for even polynomials in $\mathcal P_7(\mathbb F)$.
+\begin{solution}
+Even monic powers $1, x^2,x^4,\dots,x^{2n},\dots$ are even polynomials since
+\[
+(-x)^{2n} = (-1)^{2n}x^{2n} = x^{2n}.
+\]
+Odd powers $x,x^3,x^5,\dots,x^{2n+1},\dots$ are not:
+\[
+(-x)^{2n+1} = (-1)^{2n+1}x^{2n+1} = -x^{2n+1}\neq x^{2n+1}.
+\]
+So a polynomial is even if it is in the span of $1,x^2,x^4,\dots$, which is a linearly independent set so it is also a basis for the subspace of even polynomials.
+
+In the case of $\mathcal P_7(\mathbb F)$, a basis for even polynomials is $\{1,x^2,x^4,x^6\}$.
+\end{solution}
+
+\item
+Let\footnote{There was an extra $z_5$ in the posted problem set.} $U = 
+\{
+(z_1,z_2,z_3,z_4)\in\mathbb C^4
+\mid
+6z_1=z_2\text{ and }
+z_3+2z_4=0
+\}
+$
+Find a basis for $U$, then extend this basis to a basis of $\mathbb C^4$.
+\begin{solution}
+We can write $U$ as the set
+\[
+U = 
+\{
+(6a,a,-2b,b)\in\mathbb C^4
+\mid
+a,b\in\mathbb C
+\}.
+\]
+Since we need two numbers to describe $U$, it is a good guess that it is two-dimensional.
+Indeed, the set $\{(6,1,0,0),(0,0,-2,1)\}$ is linearly independent (it has just two vectors, which are not multiple of each other) and spans $U$, so it is a basis for $U$.
+
+To extend to a basis of $U$ we can add the canonical basis and remove elements, or just add random vectors - you will usually get a set of linearly independent vectors.
+For instance
+$\{(6,1,0,0),(0,0,-2,1),(1,0,0,0),(0,0,1,0)\}$
+is linearly independent (as you should check) and has 4 elements, so it is a basis for $\mathbb C^4$.
+\end{solution}
+
+\item 
+Let $U = \{p\in\mathcal P_4(\mathbb F)\mid p(6)=0\}$.
+Find a basis for $U$, then extend this basis to $P_4(\mathbb F)$.
+\begin{solution}
+We will borrow the observation that
+\[
+\mathcal B=\{
+(x-6),(x-6)^2,(x-6)^3,(x-6)^4
+\}
+\]
+is linearly independent set of vectors in $U$ (see question 1b), so the dimension of $U$ is at least 4.
+Since $P_4(\mathbb F)$ is 5 dimensional and $1\notin U$, the dimension of $U$ is at most 4.
+This implies that $\dim U = 4$ from which we conclude that $\mathcal B$ is a basis.
+
+By adding back $1\in\mathcal P(\mathbb F)$ we get a basis for $\mathcal P(\mathbb F)$:
+\[
+\mathcal B=\{
+1,(x-6),(x-6)^2,(x-6)^3,(x-6)^4
+\}
+\]
+\end{solution}
+
+
+\item
+Prove or give a counterexample:
+if $v_1, v_2, v_3$ spans $V$, then the vectors
+$w_1 = v_1 - v_2, w_2 = v_2 - v_3$ and $w_3 = v_3- v_1$ also span $V$.
+\begin{solution}
+False, for instance $v_1=v_2=v_3 = 1\in\mathbb R$ spans $\mathbb R$ (seen as a one-dimensional real vector space), but $v_1-v_2 = v_2-v_3 = v_3-v_1 = 0$ does not.
+\end{solution}
+\item 
+Suppose that $v_1,\dots,v_n$ is linearly independent in $V$ and $w\in V$.
+Prove that if $v_1+w,\dots,v_n+w$ is linearly dependent, then $w\in\text{span}(v_1,\dots,v_n)$.
+\begin{solution}
+If $v_1+w,\dots,v_n+w$ are linearly dependent then there exists a linear combination
+\[
+c_1\cdot (v_1+w)+\dots+c_n\cdot (v_n+w)=0
+\]
+where some of the coefficients are non-zero.
+Rearranging:
+\[
+c_1\cdot v_1 +\cdots+ c_n\cdot v_n = -(c_1+\cdots+c_n)w
+\]
+The number $-(c_1+\cdots+c_n)$ has to be non-zero:
+if it was zero, we would have a non-zero linear combination of $v_1,\dots,v_n$, contradicting linear independence.
+So we can write
+\[
+w = -\frac{1}{c_1+\cdots+c_n}(c_1\cdot v_1 +\cdots+ c_n\cdot v_n),
+\]
+showing that $w$ is in the span of $v_1,\dots,v_n$.
+\end{solution}
+
+
+\item 
+Prove that $\mathbb F^\infty$ is infinite-dimensional.
+Find a non-zero finite-dimensional subspace.
+\begin{solution}
+Let $a_i\in\mathbb F^\infty$ be the sequence with $1$ in the $i$-th entry and $0$ everywhere else.
+For instance
+\begin{align*}
+a_1 = (1,0,0,\dots),\quad a_2=(0,1,0,0,\dots),\dots
+\end{align*}
+These vectors are linearly independent, indeed a linear combination
+\[
+c_1\cdot a_{k_1}+c_2\cdot a_{k_2}+\cdots +c_n\cdot a_{k_n}=(0,0,\dots)
+\]
+implies that $c_1=c_2=\dots=c_n=0$ by comparing coefficients.
+So we found a linearly independent set with infinitely many elements, hence any basis has at least infinitely many elements.
+
+\noindent\textit{Alternate proof:}
+for each natural number $n$, there is a subspace $\widehat{\mathbb F^n}\subseteq \mathbb F^\infty$ given by lists with only zeroes after the $n$-th entry.
+It's not hard to see that $\widehat{\mathbb F^n}$ is $n$-dimensional.
+Hence the dimension of $\mathbb F^\infty$ is larger than any finite number $n$, and so itself can't be a finite number.
+\end{solution}
+\item 
+Prove that the space $C(\mathbb R)$ of continuous functions $f
+:\mathbb R\to\mathbb R$ is infinite-dimensional.
+\textit{Hint:} you know an infinite-dimensional subspace.
+\begin{solution}
+The set of all polynomials forms an infinite-dimensional subspace.
+\end{solution}
+\item
+Are the polynomials
+\[
+x^3-x^2+1 ,x^3-x^2+3, 5x^3-x^2+1, 17x^3-x^2+1\text{ and } x^2+6
+\]
+are linearly independent? \textit{Hint:} dimension.
+
+Now go to \href{https://chat.openai.com/}{chatgpt.com} and ask ChatGPT if these polynomials are linearly independent.
+It will probably get it wrong.
+When it does, have a conversation with it, and see if you can get it to correct its mistakes.
+
+\noindent
+\textbf{Note:}
+ChatGPT does not include a logic engine. It tries to answer math questions just by
+pattern-matching the language, and it tends to agree with whatever you tell it.
+\begin{solution}
+The vector space $\mathcal P_3(\mathbb R)$ is 4-dimensional and these are 5 vectors, so the set is linearly dependent.
+The point of the question was to talk to Chat GPT. (:
+\end{solution}
+\end{enumerate}
+\end{document}

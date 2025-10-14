@@ -1,0 +1,252 @@
+\documentclass[a4paper,11pt]{article}
+
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[portuguese]{babel}
+
+%\usepackage[osf,sc]{mathpazo}
+\usepackage[top=1in, bottom=1in, left=1.25in, right=1.25in]{geometry}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathrsfs} % \mathsf
+
+\usepackage[demo]{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz-cd}
+
+\usepackage{quiver}
+% surrounding boxes
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\title{Problem Set 1 - Solutions}
+\author{Matrix Theory \& Linear Algebra II}
+\date{}
+% --new title page--
+
+
+\setlength{\abovedisplayskip}{1pt}
+\setlength{\belowdisplayskip}{1pt}
+
+% \swapnumbers % 1.1.1. Teorema
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercício}
+\newtheorem{fact}[theorem]{Fato}
+\newtheorem{notation}[theorem]{Notation}
+
+
+
+\newcommand{\bC}{\mathcal C}
+\newcommand{\bF}{\mathcal F}
+\newcommand{\bR}{\mathcal R}
+
+\newcommand{\cP}{\mathcal P}
+
+\newcommand{\dashline}{\noindent\rule{2cm}{0.4pt}}
+
+\newenvironment{solution}
+  {\renewcommand\qedsymbol{$\blacksquare$}\begin{proof}[Solution]}
+  {\end{proof}}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\noindent
+In this problem set, $\mathbb F$ denotes either $\mathbb R$ or $\mathbb C$ (i.e. if $\mathbb F$ is in the question, then the solution should be agnostic to whether it was $\mathbb R$ or $\mathbb C$) and $V$ denotes a vector space over $\mathbb F$ (e.g. you can easily check (3) for $\mathbb F^n$, but the question requires you to work from the axioms of vector space (or its consequences)).
+
+\begin{enumerate}[(1)]
+\item
+There are precisely four complex numbers $z\in\mathbb C$ such that $z^4 = 1$.
+What are them?
+
+\begin{solution}
+The numbers are $1$, $i$, $-1$, and $-i$, and there are many ways you could have found them.
+Here is one: you could notice that if $z^4 = 1\implies \sqrt{z^4} = \sqrt{1} = \pm 1$.
+The roots of $+1$ are $\pm 1$, and the roots of $-1$ are $\pm i$.
+\end{solution}
+
+\item 
+Does there exist $\lambda\in\mathbb C$ such that $
+\lambda(2-3i,1+i) = (1-i,2)$?
+\begin{solution}
+Let $\lambda = a+bi$.
+Analyzing the second coordinate, we would need
+\[
+(a+bi)(1+i) = 2 \iff (a-b)+(a+b)i = 2 \iff \lambda = 1-i.
+\]
+But in the first coordinate
+\[
+(1-i)(2-3i) \neq 1-i
+\]
+so there is no solution.
+\end{solution}
+\item
+Show that $-(-v)=v$ for any $v\in V$.
+\begin{solution}
+Again there are many solutions, but all of them will go through the uniqueness of additive inverses that we proved in class.
+
+One solution: $v-v = 0 \implies v+\underbrace{-v-(-v)}_{=0} = -(-v)\implies v = -(-v)$. Here we just used that $-(-v)$ is (by definition) the additive inverse of $-v$.
+
+Another solution: we saw that $-v = (-1)\cdot v$, so $-(-v) = (-1)\cdot((-1)\cdot v = ((-1)(-1))\cdot v = 1\cdot v = v$ where we used distributivity and unitality of scalar multiplication.
+\end{solution}
+\item
+Suppose $a\in\mathbb F$, $v\in V$, and $av = 0$.
+Show that $a=0$ or $v=0$ (or both).
+\begin{solution}
+If $a\neq 0$ and $a\cdot v = 0$, then we can multiply both sides by $\frac{1}{a}$ to obtain
+\[
+\frac{1}{a}\cdot(a\cdot v) = \frac{1}{a}\cdot 0 \iff \left(\frac{1}{a}\cdot a\right)\cdot v = 0\iff
+1\cdot v = 0 \iff v = 0.
+\]
+\end{solution}
+\item 
+Consider the set $\mathbb F^2$ with the following nonstandard addition operation $\oplus$:
+\[
+(a,b)\oplus(c,d) = (a+d,b+c).
+\]
+Scalar multiplication is defined in the usual way. Is this a vector space? Why?
+\begin{solution}
+This breaks almost all the axioms.
+For instance, $(1,0)\oplus(0,1) = (2,0)$ but $(0,1)\oplus(1,0) = (0,2)$ so the operation is not commutative.
+\end{solution}
+\item 
+Is $\mathbb R$ naturally a vector space over $\mathbb C$?
+Is $\mathbb C$ naturally a vector space over $\mathbb R$?
+\textit{Hint:} only one of the answers is yes.
+\begin{solution}
+You can multiply a complex number $a+bi\in\mathbb C$ by a real number $r\in\mathbb R$ and still get a complex number:
+\[
+r\cdot(a+bi) = ra+rbi \in \mathbb C
+\]
+You can go and check that this turns $\mathbb C$ into a vector space over $\mathbb R$. (which has $\mathbb R$ as a real subspace)
+
+but in general you can't multiply a real number by a complex number and still get a real number, e.g. $i\cdot\pi$ is not a real number.
+\end{solution}
+
+
+\noindent
+\textbf{Remark:}
+the word ``natural'' means many things in Mathematics.
+In this case, it means that the operations involved are the ones you would expect.
+(for instance, the addition operation in the question before this one doesn't feel natural)
+
+\item
+Implement $\mathbb R^3$ from scratch in your favourite programming language.\footnote{I like using \href{https://www.python.org/}{Python} via \href{https://jupyter.org/}{Jupyter}.
+You can install it via \href{https://www.anaconda.com/}{Anaconda} and run it from the command prompt as \texttt{jupyter notebook}.}
+This means that although your language probably already implements $\mathbb R^3$ via arrays like \texttt{[a1 a2 a3]}, you should define a type \texttt{R3} storing three real numbers, their addition operation, their scalar multiplication, and the zero vector.
+\textit{Challenge:}
+do the same for polynomials of dimension at most two. 
+\textit{Hint for the challenge:}
+it's easy after you do the first part.
+\item
+One of the following subsets of $\mathbb R^2$ is a subspace and the others are not.
+For the one that is a vector space, check the conditions for a vector space.
+For the ones that are not, give a reason: explain one of the axioms for vector space that fails. (There might
+be more than one!)
+\begin{enumerate}
+    \item
+    The set of pairs $(x,y)\in \mathbb R^2$ such that $x=y$.
+    \item 
+    The set of pairs $(x,y,z)\in\mathbb R^2$ such that $x=y^2$.
+    \item
+    The set of pairs $(x,y)\in\mathbb R^2$ such that $y$ is an integer.
+    \item 
+    The set of triples $(x,y)\in\mathbb R^2$ such that $x=1$.
+\end{enumerate}
+
+\begin{solution}
+In (b), (c) and (d) you could find many reasons those sets are not subspaces, I will provide only one.
+    \begin{enumerate}[(a)]
+        \item.
+        Elements of this set are of the form $(x,x)$ for $x\in\mathbb R$, and this is a subspace:
+        \begin{enumerate}[(i)]
+            \item
+            Given two elements $(x,x)$ and $(y,y)$ in the subset, then their sum $(x,x)+(y,y) = (x+y,x+y)$ is still in the subset.
+            \item 
+            Given an element $(x,x)$ and a scalar $a\in\mathbb R$, the scaled vector $a\cdot (x,x) = (ax,ax)$ is still in the subset.
+            \item 
+            The zero vector $(0,0)$ is in the subset.
+        \end{enumerate}
+        \item 
+        The vectors $(1,1)$ and $(4,2)$ are in the subset, but their sum $(1,1)+(4,2) = (5,3)$ is not.
+        \item 
+        The vector $(1,1)$ is in the subset, but $\sqrt 2\cdot (1,1) = (\sqrt 2, \sqrt 2)$ is not.
+        \item 
+        The vectors $(0,1)$ and $(1,1)$ are in the subset, but their sum $(0,1)+(1,1) = (1,2)$ is not.        
+    \end{enumerate}
+\end{solution}
+\item [(9)]
+A function is $f:\mathbb R\to\mathbb R$ is called \textit{periodic} if there exists a positive number $p$ such that $f(x) = f(x+p)$ for all $x\in\mathbb R$.
+Is the set of periodic functions from $\mathbb R$ to $\mathbb R$ a subspace of $\mathbb R^\mathbb R$? Explain.
+\begin{solution}
+The set of periodic functions \textit{with a fixed period p} is a subspace (check the required properties).
+You can also check that the set of functions with rational periods is a subspace.
+Read more here: \url{https://math.stackexchange.com/a/3664450/502324}.
+
+The only thing that fails for this being a subspace is addition of functions.
+For instance, the function $f$ that has value 1 at the integers and zero everywhere else is periodic (with period 1).
+The function $g$ that has value 1 at multiples of $\sqrt 2$ and zero everywhere else is also periodic (with period 1).
+Then $(f+g)(0) = 2$, but it is no 2 nowhere else - so it is not periodic!
+
+Indeed, suppose that $(f+g)(a) = 2$ for some non-zero $a$.
+Then $f(a) +g(a) =2$.
+This can only happen if $a$ is an integer which is a multiple of $\sqrt 2$:
+\[
+a = n\cdot \sqrt 2 \implies \sqrt 2 = \frac{a}{n}.
+\]
+But we know that $\sqrt 2$ can't be a fraction, so our initial assumption couldn't be right.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{image.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+\end{solution}
+
+\item [(10)]
+Prove the following assertions.
+\begin{enumerate}
+    \item
+    The intersection of two subspaces of $V$ is a subspace.
+    \item 
+    The union of two subspaces of $V$ is a subspace if and only if one of the subspaces is contained in the other two.
+\end{enumerate}
+\item[(11)]
+Argue for or against the following statement.
+\begin{quote}
+$\mathbb R^2$ is a subspace of $\mathbb R^3$
+\end{quote}
+\begin{solution}
+There is no correct solution for this one.
+
+You can say that yes, is it a subspace because naturally you can see $(x,y)$ as $(x,y,0)$.
+
+But I would complain that this is only one way to embed $\mathbb R^2\hookrightarrow\mathbb R^3$, there are many other planes in $\mathbb R^3$ and there is no way to even ask if it is a subspace without this identification.
+\end{solution}
+\end{enumerate}
+
+\end{document}

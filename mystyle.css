@@ -1,0 +1,111 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+/* Style the side navigation */
+.sidenav {
+  width: 300px;
+  top: 0;
+  left: 0;
+  background-color: white;
+  overflow-x: hidden;
+  position: fixed;
+}
+
+.sidenav h2 {padding-left: 16px; }
+.sidenav h3 {padding-left: 16px; }
+.sidenav h4 {padding-left: 16px; }
+.sidenav p {padding-left: 16px;}
+
+
+/* Side navigation links */
+.navlink a {
+  color: #ae5c70;
+  padding-left: 16px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Hyperlink colors*/
+
+/* Unvisited links */ a:link { color: #990000; } 
+/* Visited links */ a:visited { color: #660000; } 
+/* over link */ a:hover { color: #990000} 
+/* Selected link */ a:active { color: #990000; }
+
+
+/* Change color on hover */
+
+.navlink a.active {
+  background-color: #990000!important;
+  color: white;
+}
+
+
+.navlink a:hover:not(.active) {
+  background-color: #990000 !important;
+  color: white;
+}
+
+
+
+/* Style the content */
+.content {
+  margin-left: 300px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+
+/* Getting the starting point right */
+
+.startpoint {
+    display: block;
+    position: relative;
+    top: -115px;
+    visibility: hidden;
+}
+
+
+/* If the screen is too short */
+@media (max-height: 600px) {
+  .sidenav {
+    position: absolute
+  }
+}
+
+
+
+
+/* If the screen is too narrow (mobile version) */
+
+@media (max-width: 600px) {
+  .content {
+    width: 100%;
+    margin-left: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .sidenav {
+    width: 100%;
+    position: static;
+  }
+  .navlink a {
+    padding: 0;
+  }
+.sidenav h2 {padding-left: 10px;}
+.sidenav h3 {padding-left: 10px;}
+.sidenav h4 {padding-left: 10px;}
+.sidenav p {padding-left: 10px;}
+.content ul {padding-left: 20px;}
+.content ol {padding-left: 20px;}
+}
+
+
+

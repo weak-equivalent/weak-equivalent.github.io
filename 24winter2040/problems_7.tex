@@ -1,0 +1,242 @@
+\documentclass[a4paper,11pt]{article}
+
+
+\usepackage{multicol}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[portuguese]{babel}
+
+%\usepackage[osf,sc]{mathpazo}
+\usepackage[top=1in, bottom=1in, left=1.25in, right=1.25in]{geometry}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathrsfs} % \mathsf
+
+\usepackage[demo]{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz-cd}
+
+\usepackage{quiver}
+% surrounding boxes
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\title{Problem Set 7}
+\author{Matrix Theory \& Linear Algebra II}
+\date{Winter 2025}
+% --new title page--
+
+
+
+% \swapnumbers % 1.1.1. Teorema
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercício}
+\newtheorem{fact}[theorem]{Fato}
+\newtheorem{notation}[theorem]{Notation}
+
+
+
+\newcommand{\bC}{\mathcal C}
+\newcommand{\bF}{\mathcal F}
+\newcommand{\bR}{\mathcal R}
+
+\newcommand{\cP}{\mathcal P}
+
+\newcommand{\dashline}{\noindent\rule{2cm}{0.4pt}}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+
+\noindent
+In this problem set, any vector space $V$ comes equipped with an inner product.
+The field $\mathbb F$ is either $\mathbb C$ or $\mathbb R$, unless specified.
+Ensure you do at least the first page of this document.
+
+\begin{enumerate}[(1)]
+    \item 
+    True or false:
+    \begin{enumerate}
+    \item Every unitary operator $U : X \to X$ is normal.
+    \item A matrix is unitary if and only if it is invertible.
+    \item If two matrices are unitarily equivalent, then they are also similar.
+    \item The sum of self-adjoint operators is self-adjoint.
+    \item The adjoint of a unitary operator is unitary.
+    \item The adjoint of a normal operator is normal.
+    \item If all eigenvalues of a linear operator are 1, then the operator must be unitary or orthogonal.
+    \item If all eigenvalues of a normal operator are 1, then the operator is identity.
+    \item A linear operator may preserve norm but not the inner product.
+    \end{enumerate}
+
+    
+    \item 
+    Four of the following matrices are diagonalizable. Which ones and why?
+    \begin{multicols}{2}
+    \begin{enumerate}
+    \item[(a)]
+    \[
+    \begin{bmatrix}
+    0 & -1 \\
+    1 & 0
+    \end{bmatrix}
+    \]
+    
+    \item[(b)]
+    \[
+    \begin{bmatrix}
+    2 & i & 0 \\
+    -i & 3 & 4 \\
+    0 & 4 & -1
+    \end{bmatrix}
+    \]
+    
+    \item[(c)] 
+    \[
+    \begin{bmatrix}
+    1+i & 2 & -i \\
+    0 & 3-i & 4 \\
+    0 & 0 & 5+2i
+    \end{bmatrix}
+    \]
+    \end{enumerate}
+    \columnbreak
+    \begin{enumerate}
+    \item[(d)]
+    \[
+    \begin{bmatrix}
+    0.5 & -2 & 3 & 1 \\
+    -1 & 4.2 & 0 & 3.5 \\
+    2 & -0.5 & 1.3 & 2.2 \\
+    4 & -3 & 2 & -1
+    \end{bmatrix}
+    \]
+    
+    \item[(e)]
+    \[
+    \begin{bmatrix}
+    2 & 1 & 0 & -1 & 3 \\
+    1 & 4 & 2 & 0 & -2 \\
+    0 & 2 & 5 & 1 & 4 \\
+    -1 & 0 & 1 & 3 & 2 \\
+    3 & -2 & 4 & 2 & 6
+    \end{bmatrix}
+    \]
+    \end{enumerate}
+    \end{multicols}
+    
+    \item
+    Check that the following real matrices are orthogonal and/or self-adjoint, and orthogonally diagonalize them.
+    In other words, find orthonormal bases of eigenvectors in each case.
+    \[
+    A=\begin{bmatrix}
+        0&1 \\ 1&0
+    \end{bmatrix},
+    \quad
+    B=\dfrac{1}{2}\begin{bmatrix}
+        1&-\sqrt 3 \\ \sqrt 3&1
+    \end{bmatrix},
+    \quad
+    C=\dfrac{\sqrt 2}{2}\begin{bmatrix}
+        1&1\\ 1&1
+    \end{bmatrix}.
+    \]
+    In each case give a geometric interpretation of the transformation.\newpage
+    \item 
+    Prove the following properties of adjoint operators.
+    You can do this from the definition, or by checking properties on a basis.
+    \begin{enumerate}[(a)]
+        \item 
+        $(S+T)* = S^*+T*$.
+        \item 
+        $(\lambda\cdot T)^*=\overline\lambda\cdot T^*$.
+        \item
+        $(T^*)^* = T$
+        \item
+        $(ST)^*=T^*S^*$
+        \item 
+        if $T$ is invertible, then $(T^{-1})^*=(T^*)^{-1}$
+        \item 
+        if $\lambda$ is an eigenvalue of $T$, then $\overline\lambda$ is an eigenvalue of $T^*$.
+    \end{enumerate}
+
+    \item 
+    Show that $\ker T = (\text{range}\,T^*)^\perp$.
+
+    \item 
+    Let $T:V\to V$ be a self-adjoint operator.
+    Show that if $\lambda_1\neq \lambda_2$ are distinct eigenvalues, then the corresponding eigenvectors are orthogonal.
+    Use this and the Spectral Theorem to conclude that a self-adjoint operator has an orthonormal basis of eigenvectors.
+
+    \item 
+    An operator $T:V\to W$ is an \textit{isometry} if $\langle Tv,Tw\rangle = \langle v,w\rangle$ for all $v,w\in V$.
+    Show that if $\dim V=\dim W$ then any isometry is invertible.
+    
+    
+    \item 
+    An invertible operator $T:V\to V$ is \textit{unitary} if it is an isometry (in particular, $T$ is invertible).
+    Show that an operator is unitary if and only if $TT^*=T^*T=I$ (i.e. $U^{-1}=U^*$).
+    
+    \item 
+    Using the previous exercise, explain the following assertion: ``Unitary and orthogonal operators are the operators that preserve angles and distances.''
+
+    \item Let \( U \) be a \( 2 \times 2 \) orthogonal matrix with \( \det U = 1 \). Prove that \( U \) is a rotation matrix.
+
+    \item
+    Let \( U \) be a \( 3 \times 3 \) orthogonal matrix with \( \det U = 1 \). Prove that 
+
+\begin{itemize}
+    \item[(a)] \( 1 \) is an eigenvalue of \( U \).
+    \item[(b)] If \( \mathbf{v}_1, \mathbf{v}_2, \mathbf{v}_3 \) is an orthonormal basis, such that \( U \mathbf{v}_1 = \mathbf{v}_1 \) (remember, that \( 1 \) is an eigenvalue), then in this basis the matrix of \( U \) is
+    \[
+    \begin{pmatrix}
+    1 & 0 & 0 \\
+    0 & \cos \alpha & -\sin \alpha \\
+    0 & \sin \alpha & \cos \alpha
+    \end{pmatrix},
+    \]
+    where \( \alpha \) is some angle.
+\end{itemize}
+
+    \item 
+    Let $A$ be an $m\times n$ matrix.
+    Show that
+    \begin{enumerate}
+        \item
+        $A^*A$ is self-adjoint.
+        \item
+        The eigenvalues of $A^*A$ are non-negative.
+        \item 
+        $A^*A+I$ is invertible.
+    \end{enumerate}
+
+    \item 
+    Prove that a normal operator with whose eigenvalues satisfy $\|\lambda_k\| = 1$ is unitary. Hint: diagonalize.
+
+    \item 
+    For $\mathbb F = \mathbb R$, show that self-adjoint operators form a subspace of $\mathcal L(V)$.(\textit{Hint:} this was in your 2nd WebWork homework.)
+    Show that this is false for $\mathbb F=\mathbb C$.
+
+\end{enumerate}
+
+\end{document}

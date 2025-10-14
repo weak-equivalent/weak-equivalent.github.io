@@ -1,0 +1,149 @@
+\documentclass[a4paper,11pt]{article}
+
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[portuguese]{babel}
+
+%\usepackage[osf,sc]{mathpazo}
+\usepackage[top=1in, bottom=1in, left=1.25in, right=1.25in]{geometry}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathrsfs} % \mathsf
+
+\usepackage[demo]{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz-cd}
+
+\usepackage{quiver}
+% surrounding boxes
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\title{Problem Set 6}
+\author{Matrix Theory \& Linear Algebra II}
+\date{Winter 2025}
+% --new title page--
+
+
+
+% \swapnumbers % 1.1.1. Teorema
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercício}
+\newtheorem{fact}[theorem]{Fato}
+\newtheorem{notation}[theorem]{Notation}
+
+
+
+\newcommand{\bC}{\mathcal C}
+\newcommand{\bF}{\mathcal F}
+\newcommand{\bR}{\mathcal R}
+
+\newcommand{\cP}{\mathcal P}
+
+\newcommand{\dashline}{\noindent\rule{2cm}{0.4pt}}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+
+\noindent
+In this problem set, any vector space $V$ comes equipped with an inner product.
+\begin{enumerate}[(1)]
+    \item 
+    Choose one of the inner products defined in Example 6.3 of the book.
+    Check that they are indeed inner products, i.e. show that the axioms are satisfied.
+    \item
+    Let $e_1,\dots,e_n$ be an orthonormal basis, and $v=a_1e_1+\dots+a_nv_n$.
+    Show that $a_i = \langle v,e_i\rangle$.
+    \item 
+    Suppose that $u,v\in V$ and $\|u\|=\|v\|=1$ and $\langle u,v\rangle =1$.
+    Prove that $u=v$.
+    \item 
+    Recall that in $\mathbb R^3$ it's true that
+    \[
+    \vec u\cdot \vec v = \|\vec u\|\|\vec v\|\cos\alpha,
+    \]
+    where $\alpha$ is the angle between the vectors.
+    There is no ``angle'' between vectors in a general vector space $V$, but in the presence of an inner product we can use this formula to define the angle between two vectors:
+    \[
+        \cos(u,v) =\arccos\left(\dfrac{\langle u,v\rangle}{\|u\|\|v\|}\right).
+    \]
+    \begin{enumerate}[(a)]
+    \item 
+    Show that this formula is well-defined.
+    (What is the domain of $\arccos$?)
+    \item 
+    Using the inner product $\langle f,g\rangle=\int_0^1 f(x)g(x)dx$ on $C^0([0,1])$, calculate the angle between $x$, $e^x$, and $\sin x$. 
+    \end{enumerate}
+    \item 
+    Let $\mathcal B = e_1,\dots,e_n$ be an orthonormal basis for $V$, and define the matrix $A$ whose entries are $a_{ij} = \langle e_i,e_j\rangle$.
+    Show that, for $u,v\in V$,
+    \[
+    \langle u,v\rangle = [u]_\mathcal B^\intercal \cdot A \cdot \overline{[v]}_\mathcal B,
+    \]
+    where $\overline{[v]}_\mathcal B$ denotes the vector with the conjugate of coordinates of $v$ as its entries.
+
+    \item 
+    In $\mathbb R^3$ with the usual dot product, find an orthonormal basis for
+    \[
+    U = \text{span}\left(\begin{bmatrix}
+        1\\2\\3
+    \end{bmatrix},\begin{bmatrix}
+        2\\6\\0
+    \end{bmatrix}\right).
+    \]
+
+    \item 
+    Consider the inner product space $C([0,2])$ with the inner product given by 
+    \[
+    \langle f,g\rangle = \int_0^2f(x)g(x)dx.
+    \]
+    Use Gram-Schmidt  to find an orthogonal basis for $\{1,x,x^2\}$.
+
+    \item 
+    Consider the vector space $V=C([0,2\pi],\mathbb C)$ of continuous functions $f:[0,2\pi]\to\mathbb C$.
+    An element of $V$ is a function of the form \[f(x) = u(x)+iv(x),\] where $u$ and $v$ are real valued functions $[0,2\pi]\to \mathbb R$.
+    Suppose $f=u+iv$ and $g=s+it$.
+    Define an inner product of $V$ by
+    \[
+    \langle f,g\rangle
+    =\int_0^{2\pi} u(x)s(x)dx+i\int_0^{2\pi}v(x)t(x)dx.
+    \]
+    Calculate the inner product between the functions $e^{ix}=\sin x+i\cos x$, $1$, and $x$.
+    \item 
+    In $\mathbb C^3$ with the complex dot product, find an orthonormal basis for
+    \[
+    U = \text{span}\left(\begin{bmatrix}
+        0\\i\\2
+    \end{bmatrix},\begin{bmatrix}
+        1\\i+1\\3i+2
+    \end{bmatrix}\right).
+    \]
+    
+    
+\end{enumerate}
+
+\end{document}

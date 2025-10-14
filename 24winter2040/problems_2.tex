@@ -1,0 +1,162 @@
+\documentclass[a4paper,11pt]{article}
+
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[portuguese]{babel}
+
+%\usepackage[osf,sc]{mathpazo}
+\usepackage[top=1in, bottom=1in, left=1.25in, right=1.25in]{geometry}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathrsfs} % \mathsf
+
+\usepackage[demo]{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz-cd}
+
+\usepackage{quiver}
+% surrounding boxes
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\title{Problem Set 2}
+\author{Matrix Theory \& Linear Algebra II}
+\date{}
+% --new title page--
+
+
+\setlength{\abovedisplayskip}{1pt}
+\setlength{\belowdisplayskip}{1pt}
+
+% \swapnumbers % 1.1.1. Teorema
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercício}
+\newtheorem{fact}[theorem]{Fato}
+\newtheorem{notation}[theorem]{Notation}
+
+
+
+\newcommand{\bC}{\mathcal C}
+\newcommand{\bF}{\mathcal F}
+\newcommand{\bR}{\mathcal R}
+
+\newcommand{\cP}{\mathcal P}
+
+\newcommand{\dashline}{\noindent\rule{2cm}{0.4pt}}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\noindent
+In this problem set, $\mathbb F$ denotes either $\mathbb R$ or $\mathbb C$ (i.e. if $\mathbb F$ is in the question, then the solution should be agnostic to whether it was $\mathbb R$ or $\mathbb C$) and $V$ denotes a vector space over $\mathbb F$.
+
+\begin{enumerate}[(1)]
+\item
+Which of the following lists are linearly independent?
+\begin{enumerate}[(a)]
+    \item 
+    $
+    \mathbf{v}_1 = \begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}, \quad
+    \mathbf{v}_2 = \begin{pmatrix} 4 \\ 5 \\ 6 \end{pmatrix}, \quad
+    \mathbf{v}_3 = \begin{pmatrix} 7 \\ 8 \\ 9 \end{pmatrix}
+    $,
+    as vectors of $\mathbb R^3$.
+    \item 
+    $
+    p_1 = -1, \quad
+    p_2 = x-1, \quad
+    p_3 = (x-1)^2$,
+    as vectors of $\mathcal P(\mathbb C)$.
+    \item
+    $
+    \sigma_x=
+    \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad \sigma_y = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \quad \sigma_z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}
+    $
+    as vectors of $M_{2,2}(\mathbb C)$.
+\end{enumerate}
+
+\item 
+A matrix is called \textit{anti-symmetric} if $A^\intercal = -A$.
+Write down two (distinct!) bases in the
+space of symmetric 2 × 2 matrices.
+How many elements are in each basis?
+
+\item 
+A polynomial $p\in\mathcal P(\mathbb F)$ is \textit{even} if $p(x) = p(-x)$.
+Prove that even polynomials form a subspace $U\subseteq \mathcal P(\mathbb F)$ and find a basis for even polynomials in $\mathcal P_7(\mathbb F)$.
+
+\item
+Let $U = 
+\{
+(z_1,z_2,z_3,z_4,z_5)\in\mathbb C^4
+\mid
+6z_1=z_2\text{ and }
+z_3+2z_4=0
+\}
+$
+Find a basis for $U$, then extend this basis to a basis of $\mathbb C^4$.
+
+\item 
+Let $U = \{p\in\mathcal P_4(\mathbb F)\mid p(6)=0\}$.
+Find a basis for $U$, then extend this basis to $P_4(\mathbb F)$.
+
+\item
+Prove or give a counterexample:
+if $v_1, v_2, v_3$ spans $V$, then the vectors
+$w_1 = v_1 - v_2, w_2 = v_2 - v_3$ and $w_3 = v_3- v_1$ also span $V$.
+
+\item 
+Suppose that $v_1,\dots,v_n$ is linearly independent in $V$ and $w\in V$.
+Prove that if $v_1+w,\dots,v_n+w$ is linearly dependent, then $w\in\text{span}(v_1,\dots,v_n)$.
+
+
+\item 
+Prove that $\mathbb F^\infty$ is infinite-dimensional.
+Find a non-zero finite-dimensional subspace.
+
+\item 
+Prove that the space $C(\mathbb R)$ of continuous functions $f
+:\mathbb R\to\mathbb R$ is infinite-dimensional.
+\textit{Hint:} you know an infinite-dimensional subspace.
+
+\item
+Are the polynomials
+\[
+x^3-x^2+1 ,x^3-x^2+3, 5x^3-x^2+1, 17x^3-x^2+1\text{ and } x^2+6
+\]
+are linearly independent? \textit{Hint:} dimension.
+
+Now go to \href{https://chat.openai.com/}{chatgpt.com} and ask ChatGPT if these polynomials are linearly independent.
+It will probably get it wrong.
+When it does, have a conversation with it, and see if you can get it to correct its mistakes.
+
+\noindent
+\textbf{Note:}
+ChatGPT does not include a logic engine. It tries to answer math questions just by
+pattern-matching the language, and it tends to agree with whatever you tell it.
+\end{enumerate}
+
+\end{document}

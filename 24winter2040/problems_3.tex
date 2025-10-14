@@ -1,0 +1,198 @@
+\documentclass[a4paper,11pt]{article}
+
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[portuguese]{babel}
+
+%\usepackage[osf,sc]{mathpazo}
+\usepackage[top=1in, bottom=1in, left=1.25in, right=1.25in]{geometry}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathrsfs} % \mathsf
+
+\usepackage[demo]{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz-cd}
+
+\usepackage{quiver}
+% surrounding boxes
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\title{Problem Set 3}
+\author{Matrix Theory \& Linear Algebra II}
+\date{}
+% --new title page--
+
+
+
+% \swapnumbers % 1.1.1. Teorema
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercício}
+\newtheorem{fact}[theorem]{Fato}
+\newtheorem{notation}[theorem]{Notation}
+
+
+
+\newcommand{\bC}{\mathcal C}
+\newcommand{\bF}{\mathcal F}
+\newcommand{\bR}{\mathcal R}
+
+\newcommand{\cP}{\mathcal P}
+
+\newcommand{\dashline}{\noindent\rule{2cm}{0.4pt}}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\noindent
+Given a vector $v\in V$ and a basis $\mathcal B=\{e_1,\dots,e_n\}$ for $v$, we can find unique coefficient such that
+\begin{equation}
+v=a_1e_1+\cdots+a_ne_n.
+\end{equation}
+The numbers $a_1,\dots, a_n$ are the \textit{coordinates} of $v$ and depend on $\mathcal B$.
+We also use the notation
+\[
+[v]_\mathcal B = \begin{bmatrix}
+    a_1 \\ \vdots \\ a_n 
+\end{bmatrix}_\mathcal B
+\]
+
+Given a linear transformation $T:V\to W$ and a basis $\mathcal A = \{f_1,\dots, f_m\}$ for $W$, the \textit{matrix of T} is the $m\times n$ matrix
+\[
+[T]_{\mathcal B,\mathcal A}
+=
+[[T(e_1)]_\mathcal A \mid \cdots \mid [T(e_1)]_\mathcal A ].
+\]
+The coordinates of the vector $T(v)$ can be found via matrix-vector multiplication:
+\[
+[T(v)]_\mathcal A
+=
+[T]_{\mathcal B,\mathcal A}[v]_\mathcal B
+\]
+
+\hrulefill 
+
+\begin{enumerate}[(1)]
+\item 
+Read the handout available at \url{https://people.math.harvard.edu/~knill/teaching/math19b_2011/handouts/lecture08.pdf}, then do questions 1 and 2b.
+
+\item 
+Out of the fours functions from $M_{2,2}(\mathbb C)$ to $M_{2,2}(\mathbb C)$, two are linear transformations, and the other two are not.
+For the ones that are, check the conditions for a linear transformation.
+For the ones that are not, give a reason: explain one of the axioms for linear transformations that fails. (There might be more than one!)
+\begin{enumerate}[(a)]
+\item
+The function $f:M_{2,2}(\mathbb C)\to M_{2,2}(\mathbb C)$ defined by $f(A) = A^\intercal$.
+\item 
+The function $f:M_{2,2}(\mathbb C)\to M_{2,2}(\mathbb C)$ defined by $f(A) = MAM^{-1}$, where $M$ is an invertible matrix.
+\item 
+The function $f:M_{2,2}(\mathbb C)\to M_{2,2}(\mathbb C)$ defined by $f(A) = A^2$.
+\item 
+The function $f:M_{2,2}(\mathbb C)\to M_{2,2}(\mathbb C)$ defined by $f(A) = A+I$.
+\end{enumerate}
+
+\item
+  Let $\mathcal B = \left\{\begin{bmatrix} 2 \\ -1 \end{bmatrix},
+    \begin{bmatrix} 3 \\ 2 \end{bmatrix}\right\}$ be a basis of $\mathbb R^2$  and let ${x} = \begin{bmatrix} 5 \\ -7 \end{bmatrix}$. Find $[x]_\mathcal B$.
+
+
+\item
+  Let $B = \left\{\begin{bmatrix} 1 \\ -1 \\ 2 \end{bmatrix},
+    \begin{bmatrix} 2 \\ 1 \\ 2 \end{bmatrix},
+    \begin{bmatrix} -1 \\ 0 \\ 2 \end{bmatrix}\right\}$ be a basis of $\mathbb R^3$ and let
+  ${x} = \begin{bmatrix} 5 \\ -1 \\ 4 \end{bmatrix}$ be a
+  vector in $\mathbb R^3$. Find $[x]_B$.
+
+
+  
+
+
+\item
+  Let $T: \mathbb R^2 \to \mathbb R^2$ be a linear transformation defined by
+  \begin{equation*}
+    T \left(\begin{bmatrix} a \\ b \end{bmatrix}\right)
+    = \begin{bmatrix}a+b \\ a-b \end{bmatrix}.
+  \end{equation*}
+  \begin{enumerate}[(a)]
+  \item
+  What is the null space of $T$? What is its range? 
+  \item
+  Consider the two bases
+  \begin{equation*}
+    B_1 = \left\{\begin{bmatrix} 1 \\ 0 \end{bmatrix},
+      \begin{bmatrix} -1 \\ 1 \end{bmatrix}\right\}
+  \text{ and } 
+    B_2 = \left\{\begin{bmatrix} 1 \\ 1 \end{bmatrix},
+      \begin{bmatrix} 1 \\ -1 \end{bmatrix}\right\}.
+  \end{equation*}
+  Find the matrix $M_{B_2,B_1}$ of $T$ with respect to the bases $B_1$ and $B_2$.
+\end{enumerate}
+\item
+  Let $M=\begin{bmatrix}1 & 2 \\ -2 & 1 \end{bmatrix}$, and
+  consider the linear transformation $T:M_{2,2}(\mathbb C)\to M_{2,2}(\mathbb C)$ given
+  by $T(A) = MAM$. Find the matrix of $T$ with respect to the basis
+  \begin{equation*}
+    B=\left\{
+      \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix},
+      \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix},
+      \begin{bmatrix} 0 & 0 \\ 1 & 0 \end{bmatrix},
+      \begin{bmatrix} 0 & 0 \\ 0 & 1 \end{bmatrix}
+    \right\}.
+  \end{equation*}
+  What is the null space of $T$? What is its range? 
+
+
+\item
+  Consider the linear transformation $T:\mathcal P_3(\mathbb F)\to\mathcal P_3(\mathbb F)$ given by
+  $T(p(x)) = p(x+1)$. Find $[T]_{B,B}$, where $B=\{1,x,x^2,x^3\}$.
+
+\item 
+Describe the null spaces of the transformations defined in the previous three questions.
+What is the dimension of their ranges?
+
+
+\item
+Recall that the $n$-th Taylor polynomial of a differentiable function $f:\mathbb R\to\mathbb R$, centered around a point $a\in \mathbb R$, is the polynomial
+\[
+p_n(x) = f(a)+f'(a)(x-a)+\frac{f''(a)}{2!}(x-a)^2+\cdots
+\]
+Let $g(x) = 2\sin(x-\pi)$.
+\begin{enumerate}[(a)]
+    \item
+    Write down an expression for $p_2(x)$ of $g$ centered around $\pi$.
+    \item
+    What are the coordinates of $p_2(x)$ in the basis $\{1,x,x^2\}$?
+    \item 
+    What are the coordinates of $p_2(x)$ in the basis $\{1,(x-1),(x-1)^2\}$?    
+\end{enumerate}
+\item 
+Define an integration linear transformation $\int:\mathcal P_n(\mathbb R)\to \mathcal P_{n+1}$ such that $\frac{d}{dx}\circ\int $ is the identity transformation on $\mathcal P_n$.
+
+\end{enumerate}
+
+
+\end{document}
