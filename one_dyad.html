@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dyad braid</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#fafaf7;--fg:#1c1c1a;--mut:#77756e;--grid:#d9d7cf;--A:#2563eb;--B:#ea580c;--sh:#e8efe6;--key:#fff;--blk:#222}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17171a;--fg:#ececea;--mut:#8d8b84;--grid:#34343a;--A:#60a5fa;--B:#fb923c;--sh:#20262a;--key:#e9e9e4;--blk:#0d0d0f}}
+:root[data-theme="dark"]{--bg:#17171a;--fg:#ececea;--mut:#8d8b84;--grid:#34343a;--A:#60a5fa;--B:#fb923c;--sh:#20262a;--key:#e9e9e4;--blk:#0d0d0f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1050px;margin:0 auto;padding:16px}
+h1{font-size:18px;margin:0 0 4px}p.s{color:var(--mut);margin:0 0 14px}
+.row{display:flex;flex-wrap:wrap;gap:20px}.col{flex:1 1 340px;min-width:0}
+canvas{width:100%;display:block;touch-action:none;border:1px solid var(--grid);border-radius:6px;margin-bottom:8px}
+#L{aspect-ratio:1;cursor:crosshair}#Bc{height:300px;cursor:grab}#R{height:130px;cursor:ew-resize}
+.ro{display:grid;grid-template-columns:auto 1fr 1fr;gap:4px 14px;font-variant-numeric:tabular-nums}
+.ro b{color:var(--mut);font-weight:500}.a{color:var(--A)}.b{color:var(--B)}
+button{margin:10px 8px 0 0;padding:6px 14px;border:1px solid var(--grid);background:transparent;color:var(--fg);border-radius:6px;font:inherit;cursor:pointer}
+.cap{color:var(--mut);font-size:12px;margin-top:4px}
+</style></head><body><main>
+<h1>Dyad space and its braid</h1>
+<p class="s">Keys: W / S (or ↑ / ↓) drive forward / back along the heading arrow, A / D (or ← / →) steer, Q / E transpose (both notes together), Shift = slow. Mouse: drag the point or either piano marker. Right top: the two notes as strands on the pitch-class circle, time upward. Sound is a Shepard tone, so wrapping at the border is seamless.</p>
+<div class="row">
+<div class="col"><canvas id="L"></canvas>
+<div class="cap">Window onto the infinite plane ℝ². The bright central square is one period (ℝ/12)²; faded tiles are periodic copies. x = b, y = a. Filled dots: (b, a) + 12ℤ². Hollow dots: swapped copies (a, b) + 12ℤ², the same dyad. Shaded: a ≤ b. Solid diagonals: unisons. Dashed: tritones. Arrow: heading.</div></div>
+<div class="col"><canvas id="Bc"></canvas>
+<canvas id="R"></canvas>
+<div class="ro" id="ro"></div>
+<button id="snd">Sound: off</button><button id="rst">Reset braid</button>
+<div class="cap">Braid view: drag to rotate. Strands cross exactly at unisons (a = b). Piano: C4–B4, drag a marker.</div></div>
+</div></main>
+<script>
+const N=12,names=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+const cs=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const mod=x=>((x%N)+N)%N,wd=d=>mod(d+6)-6;
+let ua=4,ub=7,base0=ua+ub;const A=()=>mod(ua),B=()=>mod(ub);
+const H=[],HMAX=360;
+const $=id=>document.getElementById(id),L=$('L'),R=$('R'),BC=$('Bc');
+function fit(c){const d=devicePixelRatio||1,r=c.getBoundingClientRect(),W=Math.round(r.width*d),Hh=Math.round(r.height*d);
+ if(c.width!==W||c.height!==Hh){c.width=W;c.height=Hh}const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return[x,r.width,r.height]}
+const freq=s=>440*Math.pow(2,(60+s-69)/12);
+const note=s=>{const n=Math.round(s),c=(s-n)*100;return names[mod(n)]+' '+(c>=0?'+':'')+c.toFixed(0)+'¢'};
+/* left plane */
+function drawPlane(cv,objs){
+ const[x,w,h]=fit(cv),p=34,S=w-p-8,W=24,O=-6,X=v=>p+(v-O)/W*S,Y=v=>8+(1-(v-O)/W)*S;
+ x.clearRect(0,0,w,h);x.save();x.beginPath();x.rect(p,8,S,S);x.clip();
+ x.fillStyle=cs('--sh');
+ for(let m=-1;m<=1;m++)for(let n=-1;n<=1;n++){const x0=12*m,y0=12*n;x.beginPath();x.moveTo(X(x0),Y(y0));x.lineTo(X(x0+12),Y(y0));x.lineTo(X(x0+12),Y(y0+12));x.fill()}
+ x.strokeStyle=cs('--grid');x.lineWidth=1;
+ for(let i=O;i<=O+W;i++){x.beginPath();x.moveTo(X(i),Y(O));x.lineTo(X(i),Y(O+W));x.moveTo(X(O),Y(i));x.lineTo(X(O+W),Y(i));x.stroke()}
+ x.strokeStyle=cs('--mut');x.lineWidth=1.5;
+ for(const k of[0,12]){x.beginPath();x.moveTo(X(O),Y(k));x.lineTo(X(O+W),Y(k));x.moveTo(X(k),Y(O));x.lineTo(X(k),Y(O+W));x.stroke()}
+ x.strokeStyle=cs('--fg');x.lineWidth=1.5;
+ for(const k of[-12,0,12]){x.beginPath();x.moveTo(X(O),Y(O+k));x.lineTo(X(O+W),Y(O+W+k));x.stroke()}
+ x.setLineDash([5,4]);x.lineWidth=1;
+ for(const k of[-18,-6,6,18]){x.beginPath();x.moveTo(X(O),Y(O+k));x.lineTo(X(O+W),Y(O+W+k));x.stroke()}
+ x.setLineDash([]);
+ objs.forEach(o=>{x.strokeStyle=x.fillStyle=cs(o.c);x.lineWidth=2;
+  for(let m=-1;m<=1;m++)for(let n=-1;n<=1;n++){const dx=12*m,dy=12*n;
+   for(let i=1;i<o.H.length;i++){const q0=o.H[i-1],q1=o.H[i],b0=mod(q0[1]),a0=mod(q0[0]),b1=mod(q1[1]),a1=mod(q1[0]);
+    if(Math.abs(b1-b0)>6||Math.abs(a1-a0)>6)continue;x.globalAlpha=i/o.H.length*.7;x.beginPath();x.moveTo(X(b0+dx),Y(a0+dy));x.lineTo(X(b1+dx),Y(a1+dy));x.stroke()}
+   x.globalAlpha=1;const a=mod(o.ua),b=mod(o.ub);
+   x.beginPath();x.arc(X(b+dx),Y(a+dy),6,0,7);x.fill();x.beginPath();x.arc(X(a+dx),Y(b+dy),6,0,7);x.stroke()}
+  if(o.th!==undefined){const pa=mod(o.ua),pb=mod(o.ub),hx=X(pb+2*Math.cos(o.th)),hy=Y(pa+2*Math.sin(o.th)),sa=Math.atan2(hy-Y(pa),hx-X(pb));
+   x.lineWidth=2;x.beginPath();x.moveTo(X(pb),Y(pa));x.lineTo(hx,hy);x.stroke();
+   x.beginPath();x.moveTo(hx,hy);x.lineTo(hx-8*Math.cos(sa-.4),hy-8*Math.sin(sa-.4));x.lineTo(hx-8*Math.cos(sa+.4),hy-8*Math.sin(sa+.4));x.closePath();x.fill()}
+ });
+ x.globalAlpha=.6;x.fillStyle=cs('--bg');
+ x.fillRect(p,8,S,Y(12)-8);x.fillRect(p,Y(0),S,8+S-Y(0));x.fillRect(p,Y(12),X(0)-p,Y(0)-Y(12));x.fillRect(X(12),Y(12),p+S-X(12),Y(0)-Y(12));
+ x.globalAlpha=1;x.strokeStyle=cs('--fg');x.lineWidth=2;x.strokeRect(X(0),Y(12),X(12)-X(0),Y(0)-Y(12));x.restore();
+ x.fillStyle=cs('--mut');x.font='9px system-ui';x.textAlign='center';
+ for(let i=O;i<O+W;i++){const pc=mod(i);if(![0,2,4,5,7,9,11].includes(pc))continue;
+  x.fillText(names[pc],X(i+.5),Y(O)+12);x.textAlign='right';x.fillText(names[pc],X(O)-4,Y(i+.5)+3);x.textAlign='center'}
+ x.font='11px system-ui';x.fillText('b →',p+S-16,h-6);x.textAlign='left';x.fillText('a ↑',4,14);
+}
+function drawL(){drawPlane(L,[{ua,ub,H,c:'--fg',th}])}
+/* braid */
+let yaw=.5,pit=.4;
+function proj(th,t,w,h){const Rr=Math.min(w,h*1.1)*.24;let x=Rr*Math.sin(th),z=Rr*Math.cos(th);
+ const cy=Math.cos(yaw),sy=Math.sin(yaw),x1=x*cy+z*sy,z1=-x*sy+z*cy,Y=(t-.5)*h*.62,cp=Math.cos(pit),sp=Math.sin(pit);
+ return[w/2+x1,h/2-(Y*cp-z1*sp),Y*sp+z1*cp]}
+function drawB(){
+ const[x,w,h]=fit(BC),n=H.length;x.clearRect(0,0,w,h);if(n<2)return;
+ const ring=(t,lab,al)=>{x.strokeStyle=cs('--grid');x.globalAlpha=al;x.lineWidth=1;x.beginPath();
+  for(let k=0;k<=96;k++){const q=proj(k/96*2*Math.PI,t,w,h);k?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1])}x.stroke();
+  if(lab){x.fillStyle=cs('--mut');x.font='10px system-ui';x.textAlign='center';for(let k=0;k<12;k++){const q=proj(k/12*2*Math.PI,t,w,h);x.fillText(names[k],q[0],q[1]-4)}}x.globalAlpha=1};
+ ring(0,false,.5);ring(1,true,.9);
+ const seg=[];
+ for(let s=0;s<2;s++)for(let i=1;i<n;i++){const t0=(i-1)/(n-1),t1=i/(n-1),
+  p0=proj(2*Math.PI*H[i-1][s]/N,t0,w,h),p1=proj(2*Math.PI*H[i][s]/N,t1,w,h);seg.push([p0,p1,s,t1,(p0[2]+p1[2])/2])}
+ seg.sort((u,v)=>u[4]-v[4]);
+ const zr=Math.min(w,h)*.24;x.lineCap='round';
+ for(const[p0,p1,s,t,z]of seg){x.strokeStyle=cs(s?'--B':'--A');x.globalAlpha=.25+.75*t;x.lineWidth=2+1.6*(z/zr+1)/2;
+  x.beginPath();x.moveTo(p0[0],p0[1]);x.lineTo(p1[0],p1[1]);x.stroke()}
+ x.globalAlpha=1;
+ [[ua,'--A'],[ub,'--B']].forEach(([u,c])=>{const q=proj(2*Math.PI*u/N,1,w,h);x.fillStyle=cs(c);x.beginPath();x.arc(q[0],q[1],5,0,7);x.fill()});
+}
+let bd=null;
+BC.addEventListener('pointerdown',e=>{bd=[e.clientX,e.clientY];BC.setPointerCapture(e.pointerId);BC.style.cursor='grabbing'});
+BC.addEventListener('pointermove',e=>{if(!bd)return;yaw+=(e.clientX-bd[0])*.01;pit=Math.max(-1.2,Math.min(1.2,pit+(e.clientY-bd[1])*.01));bd=[e.clientX,e.clientY]});
+BC.addEventListener('pointerup',()=>{bd=null;BC.style.cursor='grab'});
+/* piano */
+const cx=[.5,1,1.5,2,2.5,3.5,4,4.5,5,5.5,6,6.5,7.5];
+const px=(s,w)=>{const i=Math.min(11,Math.floor(s)),t=s-i;return((cx[i]*(1-t)+cx[i+1]*t)/8)*w};
+const inv=(x,w)=>{const u=Math.max(.5,Math.min(7.5,x/w*8));let i=0;while(i<11&&u>cx[i+1])i++;return Math.min(11.999,i+(u-cx[i])/(cx[i+1]-cx[i]))};
+function drawR(){
+ const[x,w,h]=fit(R),kw=w/8,bh=h*.62;x.clearRect(0,0,w,h);x.lineWidth=1;x.strokeStyle='#888';
+ for(let i=0;i<8;i++){x.fillStyle=cs('--key');x.fillRect(i*kw,0,kw,h);x.strokeRect(i*kw,0,kw,h)}
+ [1,2,4,5,6].forEach(i=>{x.fillStyle=cs('--blk');x.fillRect(i*kw-kw*.3,0,kw*.6,bh)});
+ x.fillStyle='#777';x.font='10px system-ui';x.textAlign='center';
+ ['C','D','E','F','G','A','B','C'].forEach((n,i)=>x.fillText(n+(i==7?'5':'4'),(i+.5)*kw,h-4));
+ [[A(),'--A','a'],[B(),'--B','b']].forEach(([s,c,l])=>{const X=px(s,w);x.strokeStyle=cs(c);x.fillStyle=cs(c);x.lineWidth=2.5;
+  x.beginPath();x.moveTo(X,0);x.lineTo(X,h-16);x.stroke();x.beginPath();x.arc(X,h-20,5,0,7);x.fill();x.font='bold 11px system-ui';x.fillText(l,X+(l=='a'?-9:9),11)});
+}
+let grab=null;
+const setA=v=>{ua+=wd(v-A())},setB=v=>{ub+=wd(v-B())};
+function setR(e){const r=R.getBoundingClientRect(),v=inv(e.clientX-r.left,r.width);grab==='a'?setA(v):setB(v)}
+R.addEventListener('pointerdown',e=>{const r=R.getBoundingClientRect(),X=e.clientX-r.left;
+ grab=Math.abs(X-px(A(),r.width))<=Math.abs(X-px(B(),r.width))?'a':'b';R.setPointerCapture(e.pointerId);setR(e)});
+R.addEventListener('pointermove',e=>{if(grab)setR(e)});R.addEventListener('pointerup',()=>grab=null);
+let drag=false;
+function setP(e){const r=L.getBoundingClientRect(),p=34,S=r.width-p-8;setB((e.clientX-r.left-p)/S*24-6);setA((1-(e.clientY-r.top-8)/S)*24-6)}
+L.addEventListener('pointerdown',e=>{drag=true;L.setPointerCapture(e.pointerId);setP(e)});
+L.addEventListener('pointermove',e=>{if(drag)setP(e)});L.addEventListener('pointerup',()=>drag=false);
+/* readout */
+function ro(){const a=A(),b=B(),e=(ua+ub-base0)/N;
+ $('ro').innerHTML=`<b></b><b class="a">a</b><b class="b">b</b>
+ <b>pitch class</b><span class="a">${a.toFixed(2)}</span><span class="b">${b.toFixed(2)}</span>
+ <b>nearest</b><span class="a">${note(a)}</span><span class="b">${note(b)}</span>
+ <b>C4-octave Hz</b><span class="a">${freq(a).toFixed(1)}</span><span class="b">${freq(b).toFixed(1)}</span>
+ <b>b − a mod 12</b><span>${mod(b-a).toFixed(2)}</span><span></span>
+ <b>braid exponent</b><span>σ<sup>${e.toFixed(2)}</sup></span><span>(1 = swap)</span>`}
+/* Shepard audio */
+const K=9,M=12*K,SIG=14,CEN=54;let ac,g,V,on=false;
+const fm=m=>440*Math.pow(2,(m+12-69)/12),wt=m=>Math.exp(-(m-CEN)*(m-CEN)/(2*SIG*SIG)),mm=x=>((x%M)+M)%M;
+function audio(){if(!ac)return;const t=ac.currentTime;
+ [ua,ub].forEach((u,v)=>V[v].forEach((p,j)=>{const m=mm(u+12*j);
+  if(p.m!==undefined&&Math.abs(m-p.m)>40){p.o.frequency.cancelScheduledValues(t);p.o.frequency.setValueAtTime(fm(m),t);p.k.gain.cancelScheduledValues(t);p.k.gain.setValueAtTime(wt(m),t)}
+  else{p.o.frequency.setTargetAtTime(fm(m),t,.015);p.k.gain.setTargetAtTime(wt(m),t,.015)}p.m=m}))}
+$('snd').onclick=async e=>{const btn=e.currentTarget;
+ try{if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();g=ac.createGain();g.gain.value=0;g.connect(ac.destination);
+   V=[0,1].map(()=>Array.from({length:K},()=>{const o=ac.createOscillator(),k=ac.createGain();o.type='sine';k.gain.value=0;o.connect(k).connect(g);o.start();return{o,k}}))}
+  await ac.resume();on=!on;audio();g.gain.cancelScheduledValues(ac.currentTime);g.gain.setTargetAtTime(on?.08:0,ac.currentTime,.03);
+  btn.textContent='Sound: '+(on?'on ('+ac.state+')':'off')}catch(err){btn.textContent='Audio failed: '+err.message}};
+$('rst').onclick=()=>{H.length=0;base0=ua+ub};
+/* loop */
+let last=0,lua,lub;
+const KS=new Set(),norm=k=>{k=k.toLowerCase();return({'<':',','>':'.'})[k]||k};
+addEventListener('keydown',e=>{if(/^Arrow/.test(e.key))e.preventDefault();KS.add(norm(e.key))});
+addEventListener('keyup',e=>KS.delete(norm(e.key)));addEventListener('blur',()=>KS.clear());
+const kk=k=>KS.has(k)?1:0;
+let th=0;
+function move(dt){const v=3*(KS.has('shift')?.3:1)*dt;
+ th+=(kk('a')+kk('arrowleft')-kk('d')-kk('arrowright'))*2*dt;
+ const f=(kk('w')+kk('arrowup')-kk('s')-kk('arrowdown'))*v;ub+=f*Math.cos(th);ua+=f*Math.sin(th);
+ const t=(kk('e')-kk('q'))*v;ua+=t;ub+=t}
+let pt=0;
+function frame(ts){const dt=Math.min(.05,(ts-(pt||ts))/1000);pt=ts;move(dt);if(ts-last>33){last=ts;H.push([ua,ub]);if(H.length>HMAX)H.shift()}
+ if(ua!==lua||ub!==lub){lua=ua;lub=ub;audio()}
+ drawL();drawB();drawR();ro();requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script></body></html>

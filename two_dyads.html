@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Two instruments: dyad braid</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#fafaf7;--fg:#1c1c1a;--mut:#77756e;--grid:#d9d7cf;--P1:#0d9488;--P2:#c026d3;--sh:#e8efe6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17171a;--fg:#ececea;--mut:#8d8b84;--grid:#34343a;--P1:#2dd4bf;--P2:#e879f9;--sh:#20262a}}
+:root[data-theme="dark"]{--bg:#17171a;--fg:#ececea;--mut:#8d8b84;--grid:#34343a;--P1:#2dd4bf;--P2:#e879f9;--sh:#20262a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1050px;margin:0 auto;padding:16px}
+h1{font-size:18px;margin:0 0 4px}p.s{color:var(--mut);margin:0 0 14px}
+.row{display:flex;flex-wrap:wrap;gap:20px}.col{flex:1 1 340px;min-width:0}
+canvas{width:100%;display:block;touch-action:none;border:1px solid var(--grid);border-radius:6px;margin-bottom:8px}
+#L{aspect-ratio:1;cursor:crosshair}#Bc{height:340px;cursor:grab}
+.ro{display:grid;grid-template-columns:auto 1fr 1fr;gap:4px 14px;font-variant-numeric:tabular-nums}
+.ro b{color:var(--mut);font-weight:500}.p1{color:var(--P1)}.p2{color:var(--P2)}
+button{margin:10px 8px 0 0;padding:6px 14px;border:1px solid var(--grid);background:transparent;color:var(--fg);border-radius:6px;font:inherit;cursor:pointer}
+.cap{color:var(--mut);font-size:12px;margin-top:4px}
+</style></head><body><main>
+<h1>Two instruments, two dyads</h1>
+<p class="s"><span class="p1">Instrument 1</span>: W / S forward / back, A / D steer, Q / E transpose. <span class="p2">Instrument 2</span>: ↑ / ↓ forward / back, ← / → steer, , / . transpose. Shift = slow. Mouse: drag the nearer dot on the left.</p>
+<div class="row">
+<div class="col"><canvas id="L"></canvas>
+<div class="cap">Window onto the infinite plane; the bright central square is one period (ℝ/12)², faded tiles are periodic copies. x = b, y = a. Filled dot = (b, a) + 12ℤ², hollow = swapped copy (a, b), the same dyad. Shaded: a ≤ b. Solid diagonals: unisons. Dashed: tritones. Arrow: heading.</div></div>
+<div class="col"><canvas id="Bc"></canvas>
+<div class="ro" id="ro"></div>
+<button id="snd">Sound: off</button><button id="rst">Reset braid</button><br><span class="cap">View:</span> <button data-v="def">Default</button><button data-v="top">Plane (top)</button><button data-v="side">Side</button><button data-v="front">Front</button><button id="spin">Spin: off</button>
+<div class="cap">Right: the quotient (Möbius strip) as the triangle a ≤ b (folded by (a,b) → (min,max)) times time, newest at top. Solid edge: unisons. Dashed legs: glued, (0, y) ~ (y, 12), so a strand leaving one leg re-enters on the other. Drag: free rotation to any angle, wheel: zoom, axis gizmo bottom-left (a′ = lower note, b′ = upper note, t = time). Audio: Shepard tones with separate registers: instrument 1 lower (triangle wave, panned left), instrument 2 higher (sine wave, panned right).</div></div>
+</div></main>
+<script>
+const N=12,names=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+const cs=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const mod=x=>((x%N)+N)%N,wd=d=>mod(d+6)-6;
+const I=[{ua:0,ub:4,c:'--P1',th:0,H:[]},{ua:7,ub:11,c:'--P2',th:0,H:[]}];I.forEach(o=>o.base=o.ua+o.ub);
+const HMAX=450,$=id=>document.getElementById(id),L=$('L'),BC=$('Bc');
+function fit(c){const d=devicePixelRatio||1,r=c.getBoundingClientRect(),W=Math.round(r.width*d),Hh=Math.round(r.height*d);
+ if(c.width!==W||c.height!==Hh){c.width=W;c.height=Hh}const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return[x,r.width,r.height]}
+const note=s=>{const n=Math.round(s),c=(s-n)*100;return names[mod(n)]+' '+(c>=0?'+':'')+c.toFixed(0)+'¢'};
+function drawPlane(cv,objs){
+ const[x,w,h]=fit(cv),p=34,S=w-p-8,W=24,O=-6,X=v=>p+(v-O)/W*S,Y=v=>8+(1-(v-O)/W)*S;
+ x.clearRect(0,0,w,h);x.save();x.beginPath();x.rect(p,8,S,S);x.clip();
+ x.fillStyle=cs('--sh');
+ for(let m=-1;m<=1;m++)for(let n=-1;n<=1;n++){const x0=12*m,y0=12*n;x.beginPath();x.moveTo(X(x0),Y(y0));x.lineTo(X(x0+12),Y(y0));x.lineTo(X(x0+12),Y(y0+12));x.fill()}
+ x.strokeStyle=cs('--grid');x.lineWidth=1;
+ for(let i=O;i<=O+W;i++){x.beginPath();x.moveTo(X(i),Y(O));x.lineTo(X(i),Y(O+W));x.moveTo(X(O),Y(i));x.lineTo(X(O+W),Y(i));x.stroke()}
+ x.strokeStyle=cs('--mut');x.lineWidth=1.5;
+ for(const k of[0,12]){x.beginPath();x.moveTo(X(O),Y(k));x.lineTo(X(O+W),Y(k));x.moveTo(X(k),Y(O));x.lineTo(X(k),Y(O+W));x.stroke()}
+ x.strokeStyle=cs('--fg');x.lineWidth=1.5;
+ for(const k of[-12,0,12]){x.beginPath();x.moveTo(X(O),Y(O+k));x.lineTo(X(O+W),Y(O+W+k));x.stroke()}
+ x.setLineDash([5,4]);x.lineWidth=1;
+ for(const k of[-18,-6,6,18]){x.beginPath();x.moveTo(X(O),Y(O+k));x.lineTo(X(O+W),Y(O+W+k));x.stroke()}
+ x.setLineDash([]);
+ objs.forEach(o=>{x.strokeStyle=x.fillStyle=cs(o.c);x.lineWidth=2;
+  for(let m=-1;m<=1;m++)for(let n=-1;n<=1;n++){const dx=12*m,dy=12*n;
+   for(let i=1;i<o.H.length;i++){const q0=o.H[i-1],q1=o.H[i],b0=mod(q0[1]),a0=mod(q0[0]),b1=mod(q1[1]),a1=mod(q1[0]);
+    if(Math.abs(b1-b0)>6||Math.abs(a1-a0)>6)continue;x.globalAlpha=i/o.H.length*.7;x.beginPath();x.moveTo(X(b0+dx),Y(a0+dy));x.lineTo(X(b1+dx),Y(a1+dy));x.stroke()}
+   x.globalAlpha=1;const a=mod(o.ua),b=mod(o.ub);
+   x.beginPath();x.arc(X(b+dx),Y(a+dy),6,0,7);x.fill();x.beginPath();x.arc(X(a+dx),Y(b+dy),6,0,7);x.stroke()}
+  if(o.th!==undefined){const pa=mod(o.ua),pb=mod(o.ub),hx=X(pb+2*Math.cos(o.th)),hy=Y(pa+2*Math.sin(o.th)),sa=Math.atan2(hy-Y(pa),hx-X(pb));
+   x.lineWidth=2;x.beginPath();x.moveTo(X(pb),Y(pa));x.lineTo(hx,hy);x.stroke();
+   x.beginPath();x.moveTo(hx,hy);x.lineTo(hx-8*Math.cos(sa-.4),hy-8*Math.sin(sa-.4));x.lineTo(hx-8*Math.cos(sa+.4),hy-8*Math.sin(sa+.4));x.closePath();x.fill()}
+ });
+ x.globalAlpha=.6;x.fillStyle=cs('--bg');
+ x.fillRect(p,8,S,Y(12)-8);x.fillRect(p,Y(0),S,8+S-Y(0));x.fillRect(p,Y(12),X(0)-p,Y(0)-Y(12));x.fillRect(X(12),Y(12),p+S-X(12),Y(0)-Y(12));
+ x.globalAlpha=1;x.strokeStyle=cs('--fg');x.lineWidth=2;x.strokeRect(X(0),Y(12),X(12)-X(0),Y(0)-Y(12));x.restore();
+ x.fillStyle=cs('--mut');x.font='9px system-ui';x.textAlign='center';
+ for(let i=O;i<O+W;i++){const pc=mod(i);if(![0,2,4,5,7,9,11].includes(pc))continue;
+  x.fillText(names[pc],X(i+.5),Y(O)+12);x.textAlign='right';x.fillText(names[pc],X(O)-4,Y(i+.5)+3);x.textAlign='center'}
+ x.font='11px system-ui';x.fillText('b →',p+S-16,h-6);x.textAlign='left';x.fillText('a ↑',4,14);
+}
+function drawL(){drawPlane(L,I)}
+const mul=(A,B)=>A.map(r=>[0,1,2].map(j=>r[0]*B[0][j]+r[1]*B[1][j]+r[2]*B[2][j]));
+const RY=a=>{const c=Math.cos(a),s=Math.sin(a);return[[c,0,s],[0,1,0],[-s,0,c]]};
+const RX=a=>{const c=Math.cos(a),s=Math.sin(a);return[[1,0,0],[0,c,-s],[0,s,c]]};
+const VIEWS={def:mul(RX(.45),RY(.6)),top:[[0,0,1],[1,0,0],[0,1,0]],side:[[0,0,1],[0,1,0],[-1,0,0]],front:[[1,0,0],[0,1,0],[0,0,1]]};
+let Rm=VIEWS.def,zm=1,spin=false;
+function P(X,Y,Z,w,h){const s=Math.min(w,h*1.05)/17*zm,v=Rm.map(r=>r[0]*X+r[1]*Y+r[2]*Z);return[w/2+v[0]*s,h/2-v[1]*s,v[2]]}
+const T=[[-6,-6],[-6,6],[6,6]];
+function drawB(){
+ const[x,w,h]=fit(BC);x.clearRect(0,0,w,h);const q=(X,Y,Z)=>P(X,Y,Z,w,h);
+ const ln=(a,b,dash,wd_,col)=>{x.setLineDash(dash);x.strokeStyle=cs(col);x.lineWidth=wd_;x.beginPath();x.moveTo(a[0],a[1]);x.lineTo(b[0],b[1]);x.stroke();x.setLineDash([])};
+ [-6,6].forEach(Y=>{const v=T.map(([X,Z])=>q(X,Y,Z));ln(v[0],v[1],[4,4],1,'--grid');ln(v[1],v[2],[4,4],1,'--grid');ln(v[0],v[2],[],1.8,'--fg')});
+ T.forEach(([X,Z],i)=>ln(q(X,-6,Z),q(X,6,Z),i==1?[4,4]:[],1,i==1?'--grid':'--fg'));
+ const sg=[];
+ I.forEach((o,i)=>{const n=o.H.length;let pv=null;
+  for(let k=0;k<n;k++){const a=mod(o.H[k][0]),b=mod(o.H[k][1]),fa=Math.min(a,b),fb=Math.max(a,b),t=1-(n-1-k)/(HMAX-1),p=q(fa-6,t*12-6,fb-6);
+   if(pv&&Math.abs(fa-pv.fa)<=6&&Math.abs(fb-pv.fb)<=6)sg.push([pv.p,p,i,t,(pv.p[2]+p[2])/2]);pv={fa,fb,p}}});
+ sg.sort((u,v)=>u[4]-v[4]);x.lineCap='round';
+ for(const[p0,p1,i,t,z]of sg){x.strokeStyle=cs(I[i].c);x.globalAlpha=.2+.8*t;x.lineWidth=1.8+1.6*(z/8+1)/2;x.beginPath();x.moveTo(p0[0],p0[1]);x.lineTo(p1[0],p1[1]);x.stroke()}
+ x.globalAlpha=1;x.font='bold 11px system-ui';x.textAlign='center';
+ I.forEach((o,i)=>{const a=mod(o.ua),b=mod(o.ub),p=q(Math.min(a,b)-6,6,Math.max(a,b)-6);x.fillStyle=cs(o.c);x.beginPath();x.arc(p[0],p[1],5,0,7);x.fill();x.fillText(i+1,p[0],p[1]-9)});
+ const gx=40,gy=h-40;x.lineWidth=1.5;x.font='11px system-ui';
+ [[1,0,0,'a′'],[0,0,1,'b′'],[0,1,0,'t']].forEach(([X,Y,Z,l])=>{const v=Rm.map(r=>r[0]*X+r[1]*Y+r[2]*Z);x.strokeStyle=x.fillStyle=cs('--mut');
+  x.beginPath();x.moveTo(gx,gy);x.lineTo(gx+v[0]*24,gy-v[1]*24);x.stroke();x.fillText(l,gx+v[0]*34,gy-v[1]*34+4)});
+}
+let bd=null;
+BC.addEventListener('pointerdown',e=>{bd=[e.clientX,e.clientY];BC.setPointerCapture(e.pointerId);BC.style.cursor='grabbing'});
+BC.addEventListener('pointermove',e=>{if(!bd)return;Rm=mul(mul(RX((e.clientY-bd[1])*.01),RY((e.clientX-bd[0])*.01)),Rm);bd=[e.clientX,e.clientY]});
+BC.addEventListener('pointerup',()=>{bd=null;BC.style.cursor='grab'});
+BC.addEventListener('wheel',e=>{e.preventDefault();zm=Math.max(.5,Math.min(3,zm*Math.exp(-e.deltaY*.001)))},{passive:false});
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{Rm=VIEWS[b.dataset.v]});
+$('spin').onclick=e=>{spin=!spin;e.currentTarget.textContent='Spin: '+(spin?'on':'off')};
+let sel=null;
+function setP(e){const r=L.getBoundingClientRect(),p=34,S=r.width-p-8,bx=(e.clientX-r.left-p)/S*24-6,ay=(1-(e.clientY-r.top-8)/S)*24-6;
+ if(!sel)return;sel.ub+=wd(bx-mod(sel.ub));sel.ua+=wd(ay-mod(sel.ua))}
+L.addEventListener('pointerdown',e=>{const r=L.getBoundingClientRect(),p=34,S=r.width-p-8,bx=(e.clientX-r.left-p)/S*24-6,ay=(1-(e.clientY-r.top-8)/S)*24-6;
+ const d=o=>Math.min(Math.hypot(wd(bx-mod(o.ub)),wd(ay-mod(o.ua))),Math.hypot(wd(bx-mod(o.ua)),wd(ay-mod(o.ub))));
+ sel=d(I[0])<=d(I[1])?I[0]:I[1];L.setPointerCapture(e.pointerId);setP(e)});
+L.addEventListener('pointermove',e=>{if(sel)setP(e)});L.addEventListener('pointerup',()=>sel=null);
+function ro(){const[A,B]=I,a1=mod(A.ua),b1=mod(A.ub),a2=mod(B.ua),b2=mod(B.ub);
+ const d=Math.min(Math.hypot(wd(a1-a2),wd(b1-b2)),Math.hypot(wd(a1-b2),wd(b1-a2))),ic=o=>{const v=mod(o.ub-o.ua);return Math.min(v,12-v)};
+ $('ro').innerHTML=`<b></b><b class="p1">1</b><b class="p2">2</b>
+ <b>note a</b><span class="p1">${note(a1)}</span><span class="p2">${note(a2)}</span>
+ <b>note b</b><span class="p1">${note(b1)}</span><span class="p2">${note(b2)}</span>
+ <b>interval class</b><span class="p1">${ic(A).toFixed(2)}</span><span class="p2">${ic(B).toFixed(2)}</span>
+ <b>braid exponent</b><span class="p1">σ<sup>${((A.ua+A.ub-A.base)/N).toFixed(2)}</sup></span><span class="p2">σ<sup>${((B.ua+B.ub-B.base)/N).toFixed(2)}</sup></span>
+ <b>distance 1–2</b><span>${d.toFixed(2)} st</span><span>${d<.3?'strands collide':''}</span>`}
+const K=9,M=12*K,SIG=14,CEN=54;let ac,g,V,on=false;
+const fm=m=>440*Math.pow(2,(m+12-69)/12),wt=(m,v)=>{const c=v<2?42:66;return Math.exp(-(m-c)*(m-c)/162)},mm=x=>((x%M)+M)%M;
+function audio(){if(!ac)return;const t=ac.currentTime;
+ [I[0].ua,I[0].ub,I[1].ua,I[1].ub].forEach((u,v)=>V[v].forEach((p,j)=>{const m=mm(u+12*j);
+  if(p.m!==undefined&&Math.abs(m-p.m)>40){p.o.frequency.cancelScheduledValues(t);p.o.frequency.setValueAtTime(fm(m),t);p.k.gain.cancelScheduledValues(t);p.k.gain.setValueAtTime(wt(m,v),t)}
+  else{p.o.frequency.setTargetAtTime(fm(m),t,.015);p.k.gain.setTargetAtTime(wt(m,v),t,.015)}p.m=m}))}
+$('snd').onclick=async e=>{const btn=e.currentTarget;
+ try{if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();g=ac.createGain();g.gain.value=0;g.connect(ac.destination);
+   V=[0,1,2,3].map(v=>{const pn=ac.createStereoPanner();pn.pan.value=v<2?-.6:.6;pn.connect(g);
+    return Array.from({length:K},()=>{const o=ac.createOscillator(),k=ac.createGain();o.type=v<2?'triangle':'sine';k.gain.value=0;o.connect(k);k.connect(pn);o.start();return{o,k}})})}
+  await ac.resume();on=!on;audio();g.gain.cancelScheduledValues(ac.currentTime);g.gain.setTargetAtTime(on?.05:0,ac.currentTime,.03);
+  btn.textContent='Sound: '+(on?'on ('+ac.state+')':'off')}catch(err){btn.textContent='Audio failed: '+err.message}};
+$('rst').onclick=()=>I.forEach(o=>{o.H.length=0;o.base=o.ua+o.ub});
+const KS=new Set(),norm=k=>{k=k.toLowerCase();return({'<':',','>':'.'})[k]||k},kk=k=>KS.has(k)?1:0;
+addEventListener('keydown',e=>{if(/^Arrow/.test(e.key))e.preventDefault();KS.add(norm(e.key))});
+addEventListener('keyup',e=>KS.delete(norm(e.key)));addEventListener('blur',()=>KS.clear());
+const K1={l:'a',r:'d',u:'w',d:'s',q:'q',e:'e'},K2={l:'arrowleft',r:'arrowright',u:'arrowup',d:'arrowdown',q:',',e:'.'};
+function move(dt){const v=3*(KS.has('shift')?.3:1)*dt;
+ [[I[0],K1],[I[1],K2]].forEach(([o,m])=>{o.th+=(kk(m.l)-kk(m.r))*2*dt;const f=(kk(m.u)-kk(m.d))*v;o.ub+=f*Math.cos(o.th);o.ua+=f*Math.sin(o.th);const t=(kk(m.e)-kk(m.q))*v;o.ua+=t;o.ub+=t})}
+let last=0,pt=0,lk='';
+function frame(ts){const dt=Math.min(.05,(ts-(pt||ts))/1000);pt=ts;move(dt);if(spin)Rm=mul(Rm,RY(dt*.6));
+ if(ts-last>33){last=ts;I.forEach(o=>{o.H.push([o.ua,o.ub]);if(o.H.length>HMAX)o.H.shift()})}
+ const k=I.map(o=>o.ua+','+o.ub).join('|');if(k!==lk){lk=k;audio()}
+ drawL();drawB();ro();requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script></body></html>
